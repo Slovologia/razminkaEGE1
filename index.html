@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Разминка недели · ЕГЭ Русский язык</title>
+<style>
+  :root{
+    --paper:#f5f2eb;
+    --paper-2:#ebe6d8;
+    --ink:#2c2416;
+    --ink-soft:#5a4a35;
+    --blue:#5a7a8c;
+    --blue-soft:#8aa3b0;
+    --brown:#8b7355;
+    --brown-soft:#b8a079;
+    --err:#a84040;
+    --ok:#5a7a5a;
+    --shadow:0 2px 8px rgba(44,36,22,.12);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:'Georgia','Times New Roman',serif;
+    background:
+      radial-gradient(circle at 20% 10%, #ece7d8 0%, transparent 40%),
+      radial-gradient(circle at 80% 90%, #e4ddc8 0%, transparent 40%),
+      var(--paper);
+    color:var(--ink);
+    line-height:1.55;
+    padding:24px;
+    min-height:100vh;
+  }
+  .page{
+    max-width:980px;
+    margin:0 auto;
+    background:var(--paper);
+    border:1px solid var(--brown-soft);
+    border-radius:4px;
+    box-shadow:var(--shadow);
+    padding:36px 44px 48px;
+    position:relative;
+  }
+  .page::before{
+    content:"";
+    position:absolute;
+    inset:8px;
+    border:1px solid var(--brown-soft);
+    border-radius:2px;
+    pointer-events:none;
+    opacity:.5;
+  }
+  header{
+    text-align:center;
+    border-bottom:1px double var(--brown);
+    padding-bottom:18px;
+    margin-bottom:28px;
+  }
+  header .eyebrow{
+    font-size:12px;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    color:var(--blue);
+    margin-bottom:6px;
+  }
+  header h1{
+    font-size:28px;
+    font-weight:normal;
+    font-style:italic;
+    color:var(--ink);
+  }
+  header .sub{
+    font-size:13px;
+    color:var(--ink-soft);
+    margin-top:6px;
+    font-style:italic;
+  }
+  .progress{
+    display:flex;
+    justify-content:center;
+    gap:18px;
+    margin:20px 0 30px;
+  }
+  .step{
+    font-size:13px;
+    color:var(--ink-soft);
+    padding:6px 14px;
+    border:1px solid transparent;
+    border-radius:20px;
+    transition:.2s;
+  }
+  .step.active{
+    color:var(--ink);
+    border-color:var(--blue);
+    background:rgba(90,122,140,.08);
+    font-weight:bold;
+  }
+  .step.done{
+    color:var(--ok);
+  }
+  .level{display:none;animation:fade .4s ease}
+  .level.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  h2{
+    font-size:20px;
+    font-weight:normal;
+    color:var(--ink);
+    margin-bottom:6px;
+    font-style:italic;
+  }
+  .level-intro{
+    font-size:14px;
+    color:var(--ink-soft);
+    margin-bottom:24px;
+    padding-left:14px;
+    border-left:2px solid var(--blue-soft);
+  }
+
+  /* ===== LEVEL 1 ===== */
+  .word-card{
+    background:var(--paper-2);
+    border:1px solid var(--brown-soft);
+    border-radius:3px;
+    padding:22px 26px;
+    margin-bottom:18px;
+    box-shadow:var(--shadow);
+  }
+  .word-display{
+    font-size:38px;
+    letter-spacing:3px;
+    text-align:center;
+    margin-bottom:18px;
+    font-family:'Georgia',serif;
+    color:var(--ink);
+    user-select:none;
+  }
+  .word-display .letter{
+    display:inline-block;
+    padding:0 1px;
+  }
+  .word-display .vowel{
+    cursor:pointer;
+    border-radius:3px;
+    transition:.15s;
+    position:relative;
+  }
+  .word-display .vowel::after{
+    content:"";
+    position:absolute;
+    left:0;right:0;bottom:-2px;
+    height:2px;
+    background:var(--blue-soft);
+    opacity:.6;
+  }
+  .word-display .vowel:hover{
+    background:rgba(90,122,140,.2);
+    transform:translateY(-2px);
+  }
+  .word-display .vowel.stressed{
+    color:var(--ok);
+    font-weight:bold;
+    text-decoration:underline;
+    text-decoration-color:var(--ok);
+    text-decoration-thickness:3px;
+    text-underline-offset:4px;
+  }
+  .word-display .vowel.stressed::after{display:none}
+  .word-display .vowel.wrong{
+    color:var(--err);
+    background:rgba(168,64,64,.15);
+  }
+  .word-display .vowel.blocked{
+    cursor:default;
+    pointer-events:none;
+  }
+  .feedback{
+    text-align:center;
+    font-size:13px;
+    color:var(--ink-soft);
+    margin-top:14px;
+    font-style:italic;
+    min-height:18px;
+  }
+  .feedback.err{color:var(--err)}
+  .feedback.ok{color:var(--ok)}
+
+  /* ===== LEVEL 2 ===== */
+  .paronym-block{
+    background:var(--paper-2);
+    border:1px solid var(--brown-soft);
+    border-radius:3px;
+    padding:22px 26px;
+    margin-bottom:18px;
+    box-shadow:var(--shadow);
+  }
+  .paronym-pair{
+    display:flex;
+    justify-content:center;
+    gap:14px;
+    margin-bottom:18px;
+    flex-wrap:wrap;
+  }
+  .paronym-chip{
+    position:relative;
+    font-size:17px;
+    padding:6px 16px;
+    background:var(--paper);
+    border:1px solid var(--blue);
+    color:var(--blue);
+    border-radius:2px;
+    cursor:help;
+    font-style:italic;
+  }
+  .paronym-chip .tip{
+    position:absolute;
+    bottom:calc(100% + 8px);
+    left:50%;
+    transform:translateX(-50%);
+    width:320px;
+    background:var(--ink);
+    color:var(--paper);
+    padding:12px 14px;
+    border-radius:3px;
+    font-size:13px;
+    line-height:1.45;
+    font-style:normal;
+    text-align:left;
+    opacity:0;
+    pointer-events:none;
+    transition:.2s;
+    z-index:10;
+    box-shadow:0 4px 14px rgba(0,0,0,.3);
+  }
+  .paronym-chip .tip::after{
+    content:"";
+    position:absolute;
+    top:100%;
+    left:50%;
+    transform:translateX(-50%);
+    border:6px solid transparent;
+    border-top-color:var(--ink);
+  }
+  .paronym-chip:hover .tip{opacity:1}
+  .sentence{
+    font-size:17px;
+    text-align:center;
+    margin-bottom:16px;
+    line-height:1.7;
+    color:var(--ink);
+  }
+  .slot{
+    display:inline-block;
+    min-width:140px;
+    padding:4px 12px;
+    margin:0 4px;
+    border-bottom:2px dashed var(--blue);
+    text-align:center;
+    color:var(--blue);
+    font-style:italic;
+    cursor:pointer;
+    transition:.15s;
+    vertical-align:baseline;
+  }
+  .slot:hover{background:rgba(90,122,140,.1)}
+  .slot.filled{
+    border-bottom-style:solid;
+    color:var(--ink);
+    font-style:normal;
+    font-weight:bold;
+  }
+  .slot.correct{color:var(--ok);border-color:var(--ok)}
+  .slot.wrong{color:var(--err);border-color:var(--err)}
+  .slot-options{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .slot-options .choice{
+    font-family:'Georgia',serif;
+    font-size:15px;
+    padding:6px 16px;
+    background:var(--paper);
+    border:1px solid var(--brown);
+    color:var(--ink);
+    border-radius:2px;
+    cursor:pointer;
+    transition:.15s;
+  }
+  .slot-options .choice:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+  .slot-options .choice.correct{background:var(--ok);color:#fff;border-color:var(--ok)}
+  .slot-options .choice.wrong{background:var(--err);color:#fff;border-color:var(--err)}
+  .slot-options .choice:disabled{cursor:default;opacity:.85}
+
+  /* ===== LEVEL 3 ===== */
+  .match-area{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:24px;
+    margin-bottom:28px;
+  }
+  .match-col h3{
+    font-size:14px;
+    text-transform:uppercase;
+    letter-spacing:2px;
+    color:var(--blue);
+    margin-bottom:12px;
+    font-weight:normal;
+    text-align:center;
+  }
+  .match-item{
+    background:var(--paper-2);
+    border:1px solid var(--brown-soft);
+    padding:10px 14px;
+    margin-bottom:8px;
+    border-radius:2px;
+    font-size:15px;
+    cursor:pointer;
+    transition:.15s;
+    text-align:center;
+  }
+  .match-item:hover{border-color:var(--blue);background:rgba(90,122,140,.08)}
+  .match-item.selected{
+    background:var(--blue);
+    color:#fff;
+    border-color:var(--blue);
+  }
+  .match-item.matched{
+    background:rgba(90,122,140,.15);
+    border-color:var(--blue);
+    color:var(--ink);
+    cursor:default;
+    position:relative;
+  }
+  .match-item.matched::after{
+    content:"✓";
+    position:absolute;
+    right:10px;
+    top:50%;
+    transform:translateY(-50%);
+    color:var(--ok);
+    font-weight:bold;
+  }
+  .match-item.idiom.matched{
+    font-style:italic;
+    text-align:left;
+    padding-right:30px;
+  }
+  .match-item.idiom.matched .meaning-inline{
+    display:block;
+    font-size:13px;
+    color:var(--ink-soft);
+    font-style:normal;
+    margin-top:4px;
+    text-align:left;
+  }
+
+  .text-block{
+    background:var(--paper-2);
+    border:1px solid var(--brown-soft);
+    border-radius:3px;
+    padding:22px 28px;
+    font-size:16px;
+    line-height:1.8;
+    color:var(--ink);
+    margin-bottom:18px;
+    box-shadow:var(--shadow);
+  }
+  .idiom-meaning{
+    background:var(--ink);
+    color:var(--paper);
+    padding:10px 16px;
+    border-radius:3px;
+    font-size:14px;
+    font-style:italic;
+    margin-bottom:14px;
+    min-height:44px;
+    text-align:center;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:.2s;
+  }
+  .idiom-meaning.empty{background:var(--paper-2);color:var(--ink-soft);border:1px dashed var(--brown-soft)}
+  .idiom-meaning.found{
+    background:var(--ok);
+    color:#fff;
+    margin-bottom:8px;
+  }
+
+  /* ===== BUTTONS ===== */
+  .actions{
+    display:flex;
+    justify-content:center;
+    gap:14px;
+    margin-top:24px;
+    flex-wrap:wrap;
+  }
+  .btn{
+    font-family:'Georgia',serif;
+    font-size:15px;
+    padding:10px 28px;
+    background:var(--paper);
+    border:1px solid var(--brown);
+    color:var(--ink);
+    border-radius:2px;
+    cursor:pointer;
+    transition:.2s;
+    letter-spacing:1px;
+  }
+  .btn:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+  .btn.primary{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+  .btn.primary:hover{background:var(--blue);border-color:var(--blue)}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+
+  .score{
+    text-align:center;
+    font-size:14px;
+    color:var(--ink-soft);
+    margin-top:14px;
+    font-style:italic;
+  }
+  .final{
+    text-align:center;
+    padding:30px 20px;
+    background:var(--paper-2);
+    border:1px solid var(--brown-soft);
+    border-radius:3px;
+    margin-top:20px;
+  }
+  .final h2{font-size:24px;margin-bottom:10px;color:var(--ok)}
+  .final p{color:var(--ink-soft);font-style:italic}
+
+  @media(max-width:640px){
+    body{padding:12px}
+    .page{padding:24px 18px}
+    .word-display{font-size:28px;letter-spacing:2px}
+    .match-area{grid-template-columns:1fr}
+    .paronym-chip .tip{width:260px}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div class="eyebrow">Разминка недели · ЕГЭ 2026</div>
+    <h1>Орфоэпия · Паронимы · Фразеология</h1>
+    <div class="sub">Три уровня · одно занятие · полная отработка</div>
+  </header>
+
+  <div class="progress">
+    <div class="step active" data-step="1">I. Ударения</div>
+    <div class="step" data-step="2">II. Паронимы</div>
+    <div class="step" data-step="3">III. Фразеологизмы</div>
+  </div>
+
+  <!-- ============ LEVEL 1 ============ -->
+  <section class="level active" id="level1">
+    <h2>Уровень I. Расставьте ударения</h2>
+    <p class="level-intro">Кликните на ту гласную в слове, на которую падает ударение. Ошибку придётся исправить, прежде чем идти дальше — а в конце все «промахи» повторятся для закрепления.</p>
+    <div id="words-container"></div>
+    <div class="feedback" id="word-feedback">&nbsp;</div>
+    <div class="score" id="word-score"></div>
+    <div class="actions">
+      <button class="btn primary" id="next-word" disabled>Далее →</button>
+    </div>
+  </section>
+
+  <!-- ============ LEVEL 2 ============ -->
+  <section class="level" id="level2">
+    <h2>Уровень II. Выберите верный пароним</h2>
+    <p class="level-intro">Наведите курсор на слово вверху — увидите его значение. Затем вставьте подходящее слово в пропуск (форма слова уже согласована с предложением).</p>
+    <div id="paronyms-container"></div>
+    <div class="score" id="paronym-score"></div>
+    <div class="actions">
+      <button class="btn primary" id="to-level3" disabled>К фразеологизмам →</button>
+    </div>
+  </section>
+
+  <!-- ============ LEVEL 3 ============ -->
+  <section class="level" id="level3">
+    <h2>Уровень III. Фразеологизмы</h2>
+    <p class="level-intro">Часть A. Соедините фразеологизм с его значением: кликните по фразеологизму, затем — по подходящему толкованию.</p>
+
+    <div class="match-area">
+      <div class="match-col">
+        <h3>Фразеологизмы</h3>
+        <div id="idioms-col"></div>
+      </div>
+      <div class="match-col">
+        <h3>Значения</h3>
+        <div id="meanings-col"></div>
+      </div>
+    </div>
+    <div class="score" id="match-score"></div>
+    <div class="actions">
+      <button class="btn primary" id="to-text" disabled>К мини-тексту →</button>
+    </div>
+
+    <div id="text-part" style="display:none;margin-top:28px;border-top:1px double var(--brown-soft);padding-top:24px">
+      <p class="level-intro">Часть B. Прочитайте текст. Найдите в нём фразеологизмы и щёлкните по ним — они подсветятся, а их значения появятся ниже для закрепления.</p>
+      <div id="idiom-meanings-container"></div>
+      <div class="text-block" id="mini-text"></div>
+      <div class="score" id="text-score"></div>
+      <div class="actions">
+        <button class="btn primary" id="finish-btn" disabled>Завершить разминку</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FINAL ============ -->
+  <section class="level" id="final">
+    <div class="final">
+      <h2>Разминка завершена</h2>
+      <p id="final-stats"></p>
+      <p style="margin-top:10px">Хорошей работы на уроке!</p>
+      <div class="actions" style="margin-top:20px">
+        <button class="btn" onclick="location.reload()">Пройти ещё раз</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+/* ================== LEVEL 1 ================== */
+const words = [
+  { full:"аэропорты", stressedIdx:5, display:"аэропОрты" },
+  { full:"водопровод", stressedIdx:8, display:"водопровОд" },
+  { full:"газопровод", stressedIdx:8, display:"газопровОд" },
+  { full:"нефтепровод", stressedIdx:9, display:"нефтепровОд" },
+  { full:"некролог", stressedIdx:6, display:"некролОг" },
+  { full:"каталог", stressedIdx:5, display:"каталОг" },
+];
+
+let wIndex = 0;
+let wErrors = [];
+let wFirstTryErrors = 0;
+let wTotal = words.length;
+let wLocked = false;
+let inReview = false;
+
+const wCont = document.getElementById('words-container');
+const wFb = document.getElementById('word-feedback');
+const wScore = document.getElementById('word-score');
+const wNext = document.getElementById('next-word');
+
+function renderWord(){
+  if(wIndex >= words.length){
+    finishLevel1();
+    return;
+  }
+  const w = words[wIndex];
+  const vowels = 'аеёиоуыэюя';
+  const letters = w.full.split('').map((ch, i) => {
+    if(vowels.includes(ch.toLowerCase())){
+      return `<span class="vowel" data-idx="${i}">${ch}</span>`;
+    }
+    return `<span class="letter">${ch}</span>`;
+  }).join('');
+
+  wCont.innerHTML = `
+    <div class="word-card">
+      <div class="word-display">${letters}</div>
+    </div>
+  `;
+  wFb.textContent = inReview ? 'Закрепление: слово, в котором была ошибка' : `Слово ${wIndex+1} из ${wTotal}`;
+  wFb.className = 'feedback';
+  wNext.disabled = true;
+  wLocked = false;
+
+  document.querySelectorAll('.vowel').forEach(el=>{
+    el.addEventListener('click', ()=>checkVowel(parseInt(el.dataset.idx)));
+  });
+}
+
+function checkVowel(idx){
+  if(wLocked) return;
+  const w = words[wIndex];
+  const vowelEls = document.querySelectorAll('.vowel');
+  const clickedEl = [...vowelEls].find(el => parseInt(el.dataset.idx) === idx);
+
+  if(idx === w.stressedIdx){
+    clickedEl.classList.add('stressed');
+    vowelEls.forEach(v => v.classList.add('blocked'));
+    wFb.innerHTML = '✓ Верно: <b>' + w.display + '</b>';
+    wFb.className = 'feedback ok';
+    wLocked = true;
+    wNext.disabled = false;
+  } else {
+    clickedEl.classList.add('wrong');
+    wFb.textContent = '✗ Неверно. Кликните на ту гласную, которая является ударной.';
+    wFb.className = 'feedback err';
+    if(!w._counted){
+      w._counted = true;
+      wFirstTryErrors++;
+      if(!wErrors.find(e=>e.full===w.full)) wErrors.push({...w});
+    }
+    setTimeout(()=>{
+      clickedEl.classList.remove('wrong');
+    }, 900);
+  }
+}
+
+wNext.addEventListener('click', ()=>{
+  wIndex++;
+  if(wIndex >= words.length && wErrors.length && !inReview){
+    inReview = true;
+    words.push(...wErrors.map(e=>({...e, _review:true})));
+    wFb.textContent = 'Повторяем слова, в которых ошиблись…';
+    wFb.className = 'feedback';
+  }
+  renderWord();
+});
+
+function finishLevel1(){
+  wScore.textContent = `Результат: ${wTotal - wFirstTryErrors} из ${wTotal} с первой попытки`;
+  wCont.innerHTML = `
+    <div class="word-card" style="text-align:center">
+      <div style="font-size:18px;color:var(--ok);margin-bottom:10px">✓ Уровень пройден</div>
+      <div style="font-size:14px;color:var(--ink-soft);font-style:italic">
+        ${wErrors.length ? 'Ошибки: ' + wErrors.map(e=>e.display).join(', ') : 'Безупречно!'}
+      </div>
+    </div>
+  `;
+  wFb.textContent = '';
+  wNext.textContent = 'К паронимам →';
+  wNext.disabled = false;
+  wNext.onclick = ()=>goToLevel(2);
+  document.querySelector('[data-step="1"]').classList.add('done');
+}
+
+renderWord();
+
+/* ================== LEVEL 2 ================== */
+const paronyms = [
+  {
+    pair:[
+      {w:"абонемент", tip:"Документ, удостоверяющий право на регулярное пользование чем-либо (пропуск, подписка, клубная карта). Примеры: библиотечный, театральный абонемент."},
+      {w:"абонент", tip:"Владелец абонемента, пользователь услуг связи. Примеры: абонент телефонной сети, библиотеки."}
+    ],
+    sentence:"Я приобрёл месячный ___ в бассейн.",
+    correct:"абонемент"
+  },
+  {
+    pair:[
+      {w:"авторитарный", tip:"Основанный на неограниченной власти, требующий слепого подчинения (диктаторский, властный). Пример: авторитарный режим, стиль руководства."},
+      {w:"авторитетный", tip:"Обладающий общепризнанным уважением, пользующийся доверием (уважаемый, компетентный). Пример: авторитетный учёный, источник."}
+    ],
+    sentence:"___ учёный выступил с лекцией по истории языка.",
+    correct:"Авторитетный"
+  },
+  {
+    pair:[
+      {w:"адресант", tip:"Тот, кто отправляет письмо, посылку (отправитель)."},
+      {w:"адресат", tip:"Тот, кто получает письмо, посылку (получатель). Не дойти письмо может, если неизвестен адресат."}
+    ],
+    sentence:"Письмо вернулось, потому что неизвестен ___.",
+    correct:"адресат"
+  },
+  {
+    pair:[
+      {w:"артистическое", tip:"Принадлежащее артистам, относящееся к ним (актёрское, театральное). Пример: артистическая карьера, среда."},
+      {w:"артистичное", tip:"Отличающееся артистизмом, художественным вкусом, исполненное талантливо. Пример: артистичное исполнение сонаты."}
+    ],
+    sentence:"___ исполнение сонаты покорило зал.",
+    correct:"Артистичное"
+  },
+  {
+    pair:[
+      {w:"бедном", tip:"Не имеющем достаточных средств; испытывающем недостаток в чём-либо; вызывающем сострадание."},
+      {w:"бедственном", tip:"Крайне тяжёлом, исполненном бедствий (опасном, безвыходном). Пример: бедственное положение."}
+    ],
+    sentence:"После пожара семья оказалась в ___ положении.",
+    correct:"бедственном"
+  }
+];
+
+let pIndex = 0;
+let pCorrect = 0;
+const pCont = document.getElementById('paronyms-container');
+const pScore = document.getElementById('paronym-score');
+const pNext = document.getElementById('to-level3');
+
+function renderParonym(){
+  if(pIndex >= paronyms.length){
+    finishLevel2();
+    return;
+  }
+  const p = paronyms[pIndex];
+  pCont.innerHTML = `
+    <div class="paronym-block">
+      <div class="paronym-pair">
+        ${p.pair.map(x=>`<div class="paronym-chip">${x.w}<div class="tip">${x.tip}</div></div>`).join('')}
+      </div>
+      <div class="sentence">${p.sentence.replace('___', '<span class="slot" id="slot">?</span>')}</div>
+      <div class="slot-options">
+        ${p.pair.map(x=>`<button class="choice" data-w="${x.w}">${x.w}</button>`).join('')}
+      </div>
+    </div>
+  `;
+  pCont.querySelectorAll('.choice').forEach(btn=>{
+    btn.addEventListener('click', ()=>checkParonym(btn.dataset.w));
+  });
+}
+
+function checkParonym(chosen){
+  const p = paronyms[pIndex];
+  const slot = document.getElementById('slot');
+  const btns = pCont.querySelectorAll('.choice');
+
+  const isSentenceStart = p.sentence.startsWith('___');
+  const displayWord = isSentenceStart
+    ? chosen.charAt(0).toUpperCase() + chosen.slice(1)
+    : chosen;
+
+  slot.textContent = displayWord;
+  slot.classList.add('filled');
+
+  const chosenLower = chosen.toLowerCase();
+  const correctLower = p.correct.toLowerCase();
+
+  if(chosenLower === correctLower){
+    slot.classList.add('correct');
+    btns.forEach(b=>{
+      if(b.dataset.w.toLowerCase() === chosenLower) b.classList.add('correct');
+      b.disabled = true;
+    });
+    pCorrect++;
+    setTimeout(()=>{ pIndex++; renderParonym(); }, 1000);
+  } else {
+    slot.classList.add('wrong');
+    btns.forEach(b=>{
+      if(b.dataset.w.toLowerCase() === chosenLower){
+        b.classList.add('wrong');
+        b.disabled = true;
+      }
+    });
+    setTimeout(()=>{
+      slot.classList.remove('wrong','filled');
+      slot.textContent = '?';
+      btns.forEach(b=>{
+        if(b.dataset.w.toLowerCase() !== correctLower) b.disabled = false;
+      });
+    }, 1100);
+  }
+}
+
+function finishLevel2(){
+  pScore.textContent = `Результат: ${pCorrect} из ${paronyms.length}`;
+  pCont.innerHTML = `
+    <div class="paronym-block" style="text-align:center">
+      <div style="font-size:18px;color:var(--ok);margin-bottom:10px">✓ Уровень пройден</div>
+    </div>
+  `;
+  pNext.disabled = false;
+  pNext.onclick = ()=>goToLevel(3);
+  document.querySelector('[data-step="2"]').classList.add('done');
+}
+
+renderParonym();
+
+/* ================== LEVEL 3 ================== */
+const idioms = [
+  { idiom:"альфа и омега", meaning:"самое главное, основа, начало и конец" },
+  { idiom:"без оглядки", meaning:"стремительно, не думая, не рассуждая" },
+  { idiom:"бить ключом", meaning:"бурно, активно проявлять себя" },
+  { idiom:"бок о бок", meaning:"совсем рядом, вместе" },
+  { idiom:"более или менее", meaning:"относительно, в той или иной степени" },
+  { idiom:"болеть душой", meaning:"переживать, беспокоиться о ком-либо" }
+];
+
+const textIdioms = [
+  { key:"без устали", display:"без устали", meaning:"не переставая, непрерывно" },
+  { key:"броситься в глаза", display:"бросался в глаза", meaning:"обратить на себя внимание, стать заметным" },
+  { key:"валиться из рук", display:"валится из рук", meaning:"плохо удаваться, не ладиться" }
+];
+
+const iCol = document.getElementById('idioms-col');
+const mCol = document.getElementById('meanings-col');
+const mScore = document.getElementById('match-score');
+let selectedIdiom = null;
+let matchedCount = 0;
+
+const shuffledMeanings = [...idioms].sort(()=>Math.random()-0.5);
+
+idioms.forEach(it=>{
+  const d = document.createElement('div');
+  d.className = 'match-item idiom';
+  d.innerHTML = it.idiom;
+  d.dataset.idiom = it.idiom;
+  d.dataset.meaning = it.meaning;
+  d.addEventListener('click', ()=>{
+    if(d.classList.contains('matched')) return;
+    document.querySelectorAll('#idioms-col .match-item').forEach(x=>x.classList.remove('selected'));
+    d.classList.add('selected');
+    selectedIdiom = it.idiom;
+  });
+  iCol.appendChild(d);
+});
+
+shuffledMeanings.forEach(m=>{
+  const d = document.createElement('div');
+  d.className = 'match-item meaning';
+  d.textContent = m.meaning;
+  d.dataset.meaning = m.meaning;
+  d.dataset.idiom = m.idiom;
+  d.addEventListener('click', ()=>{
+    if(!selectedIdiom) return;
+    if(d.dataset.idiom === selectedIdiom){
+      const idiomEl = document.querySelector(`#idioms-col .match-item[data-idiom="${CSS.escape(selectedIdiom)}"]`);
+      idiomEl.classList.remove('selected');
+      idiomEl.classList.add('matched');
+      idiomEl.innerHTML = idiomEl.dataset.idiom + '<span class="meaning-inline">— ' + idiomEl.dataset.meaning + '</span>';
+      d.remove();
+      matchedCount++;
+      mScore.textContent = `Соединено: ${matchedCount} из ${idioms.length}`;
+      selectedIdiom = null;
+      if(matchedCount === idioms.length){
+        document.getElementById('to-text').disabled = false;
+      }
+    } else {
+      d.style.background = 'rgba(168,64,64,.15)';
+      d.style.borderColor = 'var(--err)';
+      setTimeout(()=>{
+        d.style.background = '';
+        d.style.borderColor = '';
+      }, 600);
+    }
+  });
+  mCol.appendChild(d);
+});
+
+document.getElementById('to-text').addEventListener('click', ()=>{
+  document.getElementById('text-part').style.display = 'block';
+  document.getElementById('to-text').style.display = 'none';
+  mScore.textContent = '';
+  document.querySelector('[data-step="3"]').classList.add('active');
+  renderMiniText();
+});
+
+/* ---------- MINI TEXT ---------- */
+const miniText = `Учительница русского языка работала без устали: каждый день она готовила новые уроки, проверяла тетради и старалась найти подход к каждому ученику. Её энтузиазм бросался в глаза — даже самые ленивые школьники начинали интересоваться предметом. Правда, бывали дни, когда всё валится из рук: техника ломается, планы рушатся, и кажется, что ничего не получается. Но она не сдавалась, ведь любила свою работу.`;
+
+const tBlock = document.getElementById('mini-text');
+const tMeaningsContainer = document.getElementById('idiom-meanings-container');
+const tScore = document.getElementById('text-score');
+let foundCount = 0;
+const totalClickable = 3;
+
+function renderMiniText(){
+  let html = miniText;
+  textIdioms.forEach(ti => {
+    const regex = new RegExp(ti.display, 'g');
+    html = html.replace(regex, `<span class="clickable" data-key="${ti.key}" data-display="${ti.display}">${ti.display}</span>`);
+  });
+  
+  tBlock.innerHTML = html;
+  tBlock.querySelectorAll('.clickable').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      if(el.classList.contains('found')) return;
+      el.classList.add('found');
+      const key = el.dataset.key;
+      const meaningObj = textIdioms.find(x=>x.key===key);
+      
+      // Добавляем новое значение вместо замены
+      const meaningDiv = document.createElement('div');
+      meaningDiv.className = 'idiom-meaning found';
+      meaningDiv.textContent = `«${key}» — ${meaningObj.meaning}`;
+      tMeaningsContainer.appendChild(meaningDiv);
+      
+      foundCount++;
+      tScore.textContent = `Найдено: ${foundCount} из ${totalClickable}`;
+      if(foundCount === totalClickable){
+        document.getElementById('finish-btn').disabled = false;
+      }
+    });
+  });
+}
+
+document.getElementById('finish-btn').addEventListener('click', ()=>{
+  goToLevel('final');
+  document.querySelector('[data-step="3"]').classList.add('done');
+  document.getElementById('final-stats').textContent =
+    `Ударения: ${wTotal - wFirstTryErrors}/${wTotal} с первой попытки · Паронимы: ${pCorrect}/${paronyms.length} · Фразеологизмы: ${matchedCount}/${idioms.length} + ${foundCount}/${totalClickable} в тексте`;
+});
+
+/* ================== NAV ================== */
+function goToLevel(n){
+  document.querySelectorAll('.level').forEach(l=>l.classList.remove('active'));
+  document.getElementById(n === 'final' ? 'final' : 'level'+n).classList.add('active');
+  document.querySelectorAll('.step').forEach(s=>{
+    if(parseInt(s.dataset.step) === n) s.classList.add('active');
+  });
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>
