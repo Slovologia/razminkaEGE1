@@ -1,0 +1,1 @@
+# razminkaEGE1
